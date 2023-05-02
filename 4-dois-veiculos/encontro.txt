@@ -1,21 +1,49 @@
-const fatutamento = [
-    {state: "SP", value: 67836.43},
-    {state: "RJ", value: 36678.66},
-    {state: "MG", value: 29229.88},
-    {state: "ES", value: 27165.48},
-    {state: "Outros", value: 19849.53}
-];
+4 - Dois veículos (um carro e um caminhão) saem respectivamente de cidades opostas pela mesma rodovia. O carro de Ribeirão Preto em direção a Franca,
+a uma velocidade constante de 110 km/h e o caminhão de Franca em direção a Ribeirão Preto a uma velocidade constante de 80 km/h. 
+Quando eles se cruzarem na rodovia, qual estará mais próximo a cidade de Ribeirão Preto?
+IMPORTANTE:
+a) Considerar a distância de 100km entre a cidade de Ribeirão Preto <-> Franca.
+b) Considerar 2 pedágios como obstáculo e que o caminhão leva 5 minutos a mais para passar em cada um deles e o carro possui tag de pedágio (Sem Parar)
+c) Explique como chegou no resultado.
 
-const total  = fatutamento.reduce((accumulator, value) => {
-    accumulator += value.value;
+Não sei se entendi bem a pergunta, pois no ponto de encontro os dois estarão na mesma distância de Ribeirão Preto. De toda forma calculei o tempo
+e a posição de encontro dos dois a baixo.
 
-    return accumulator;
-},0);
+    Para encontrar o ponto de encontro dos dois veículos basta igualar as funções horárias do espaço de cada um deles, que é definida por:
+        S = d + v*t
+        (
+            S: Distância percorrida;
+            d: Distância da origem;
+            v: Velocidade média;
+            t: Tempo:
+        )
 
-let percentage;
+    Tomando Ribeirão Preto como quilômetro 0, a função do carro será:
+        S = 0 + 110*t   =>  S = 110t
 
-fatutamento.forEach((value) => {
-    percentage = (value.value / total) * 100;
-    console.log(value.state + " teve participação de "+ percentage.toFixed(2)
-    +"% no total mensal do faturamento");
-})
+    Já o caminhão requer uma atenção a mais, ele possui uma velocidade constante de 80km/h, porém realizou duas paradas
+que afetaram sua velocidade média, logo pra calcularmos ela temos que primeiro adicionar os 10 min de parada (tempos somados):
+        Vm = d / t
+        (
+            Vm: Velocidade média;
+            d: Distância;
+            t: Tempo;
+        )
+
+        80 km/h = 100 km / t    =>  t = 100 km / 80 km/h    =>  t = 1,25h
+        10 min = 1/6 * 1 h  => 0,1667 h
+
+        Tempo Total = tempo de viagem + tempo das paradas   => Tt = 1,25 h + 0,1667h    =>  Tt = 1,4167 h
+
+        Vm = 100 km / 1,4167 h = 70,59 km / horárias
+
+    Novamente tomando Ribeirão Preto como quilômetro 0, a função do caminhão será:
+        S = 100 - 70,59t       (A velocidade é negativa porque o sentido do movimento é o contrário da tragetória)
+    
+    Igualando as duas, temos: 
+        110t = 100 - 70,59t =>  180,59t = 100   =>  t = 0,553 h
+
+    Eles se encontraram em 0,553 horas, aplicando este valor na função horária do espaço do carro:
+        S = 110 * t => S = 110 * 0,553  =>  60,83 km
+
+    Os veículos se encontram a 60,83 km de Ribeirão Preto.
